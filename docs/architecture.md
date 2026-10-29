@@ -18,7 +18,7 @@ Recovery is distributed among users whose availability plus reservations is belo
 
 Upstream spending order is authoritative: ordinary Opus before purchased Opus, and subscription Anlas before purchased Anlas. A request may combine pools only at the modeled global boundary and only with the caller's funds. With a positive regular Opus reserve, purchased Opus can remain inaccessible while the upstream ordinary pool still contains that reserve. Setting `reserve = 0` removes this deliberate restriction; the gateway does not silently exchange one user's purchased quota for another user's ordinary quota.
 
-Reservations are persisted before dispatch. Sending is separately persisted before network I/O, so a crash in the small interval before an actual write is conservatively treated as possibly executed. Explicit rejections refund; successful responses consume the reservation; uncertain responses retain the estimate. Recent terminal outcomes are bounded persistent diagnostics, not an unlimited billing archive. No automatic retry replays a sent generation.
+Reservations are persisted before dispatch. Sending is separately persisted before network I/O, so a crash between that write and transmission retains the charge under the `unknown` outcome. Explicit rejections refund; successful responses consume the reservation; responses without a confirmed outcome retain the estimate. Recent terminal outcomes are bounded persistent diagnostics, not an unlimited billing archive. No automatic retry replays a sent generation.
 
 ## Protocol boundary
 
@@ -34,4 +34,4 @@ Only the supported image routes are proxied. Subscription responses are reconstr
 
 Users alternate turns while each user's queue remains FIFO. Concurrency controls the size of finite dispatch batches. The server waits for a batch to finish before fetching a clean snapshot and starting another batch. Rate-limit responses establish account-wide cooldown without replaying the rejected generation. Quota query failures pause dispatch until a successful refresh.
 
-Build and release workflows compile only Linux amd64 production artifacts. Tests cover pure state transitions, pricing, metadata parsing, stream observation and scheduling helpers. Database persistence, live HTTP transfer, container startup and upstream charging behavior are not established by those tests.
+Build and release workflows compile only Linux amd64 production artifacts. Tests cover pure state transitions, pricing, metadata parsing, stream observation and scheduling helpers with constructed inputs. The release workflow builds and publishes the container image. Database persistence, live HTTP transfer, container startup and actual upstream charges are outside the automated verification scope.

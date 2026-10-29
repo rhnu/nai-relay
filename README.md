@@ -20,7 +20,7 @@ export NAI_RELAY_KEYS='["first-user-key","second-user-key"]'
 ./nai-relay
 ```
 
-Configuration is read at startup. Array position identifies the wallet: replacing a key at the same position preserves its balance; reordering keys changes which wallet each key accesses. Empty or duplicate keys fail validation. A changed user count is rejected. To change membership count, stop the service, delete its database and any SQLite sidecar files, and restart to split the current upstream balances again. This permanently discards the previous ledger.
+Configuration is read at startup. Array position identifies the wallet: replacing a key at the same position preserves its balance; reordering keys changes which wallet each key accesses. Empty or duplicate keys fail validation. A changed user count is rejected. To change membership count, stop the service, delete its database and any SQLite sidecar files, and restart to split the current upstream balances again. This permanently discards the previous accounting records.
 
 ## Container
 
@@ -60,7 +60,7 @@ Generation prices are estimates based on the maintained `novelai-bridge` rules a
 
 The scheduler rotates among users, with FIFO within each user. Defaults are one upstream request at a time, a 10-second start interval, four waiting requests per user and a five-minute queue deadline. Insufficient funds return 402. Queue capacity and upstream rate limits return 429. Upstream requests are not automatically replayed.
 
-Requests are reserved before sending. Definitely unexecuted requests are refunded. A sent request that disconnects, times out or is interrupted by a process exit retains its estimated charge and is recorded as unknown. This avoids refunding work that the upstream may have completed. A 200 status or a preview event alone does not establish stream completion.
+Requests are reserved before sending. Requests confirmed as unexecuted are refunded. A sent request that disconnects, times out or is interrupted by a process exit retains its estimated charge and is recorded as `unknown`. Refunds require confirmation that the upstream did not execute the request. A complete stream requires a final image event for every expected sample followed by normal EOF.
 
 ## Build and release
 
@@ -73,8 +73,8 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -trimpath ./cmd/nai-relay
 docker build -t nai-relay .
 ```
 
-Tests are pure logic unit tests, without a live NovelAI account, HTTP test server or database integration suite. Version tags such as `v0.1.0` publish a Linux amd64 archive, SHA-256 checksums and a GHCR image. Prerelease tags do not update `latest`. GitHub Actions requires repository contents/package write permissions for releases. No upstream token is needed in CI.
+CI checks formatting, runs `go vet` and pure logic unit tests, and builds the Linux amd64 executable. Tests use constructed inputs without a live NovelAI account, HTTP test server or database integration suite. Version tags publish a Linux amd64 archive, SHA-256 checksums and a GHCR image; [v0.1.0](https://github.com/rhnu/nai-relay/releases/tag/v0.1.0) provides these artifacts. Stable releases update `latest`; prerelease tags do not. GitHub Actions requires repository contents/package write permissions for releases. No upstream token is needed in CI.
 
-Real upstream compatibility, consumption accuracy and first GitHub publication require manual acceptance. The historical generation-integrated `parameters.upscale` option has no established price and is rejected; the separate native `/ai/upscale` operation is supported. See [architecture](docs/architecture.md) for accounting and protocol boundaries.
+CI verifies builds and publication; live NovelAI operation and actual upstream charges are outside its verification scope. The generation-integrated `parameters.upscale` option is rejected; use the separate native `/ai/upscale` operation. See [architecture](docs/architecture.md) for accounting and protocol boundaries.
 
 Licensed under Apache-2.0. Not affiliated with NovelAI. Pricing and protocol references include the author's [novelai-bridge](https://github.com/rhnu/novelai-bridge), the [official schema](https://image.novelai.net/docs/doc.json), and [Opus usage explanation](https://journal.novelai.net/opus-usage-limit-explained/).
