@@ -17,4 +17,4 @@ max_body_bytes = 268435456
 usage_multiplier = 1.0
 # temp_dir = "/tmp/nai-relay"
 # upstream_url = "https://image.novelai.net"
-# subscription_url = "https://api.novelai.net/user/subscription"
+# subscription_url = "https://image.novelai.net/user/subscription"

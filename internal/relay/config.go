@@ -38,7 +38,7 @@ type Config struct {
 }
 
 func DefaultConfig() Config {
-	return Config{UpstreamURL: "https://image.novelai.net", SubscriptionURL: "https://api.novelai.net/user/subscription", Listen: "0.0.0.0:8080", Database: "data/nai-relay.db", Reserve: 1, DeficitPolicy: "proportional", Concurrency: 1, StartInterval: 10 * time.Second, QueuePerUser: 4, QueueTimeout: 5 * time.Minute, RequestTimeout: 5 * time.Minute, SnapshotMaxAge: 120 * time.Second, PollInterval: 60 * time.Second, MemoryBodyBytes: 8 << 20, MaxBodyBytes: 256 << 20, UsageMultiplier: 1}
+	return Config{UpstreamURL: "https://image.novelai.net", SubscriptionURL: "https://image.novelai.net/user/subscription", Listen: "0.0.0.0:8080", Database: "data/nai-relay.db", Reserve: 1, DeficitPolicy: "proportional", Concurrency: 1, StartInterval: 10 * time.Second, QueuePerUser: 4, QueueTimeout: 5 * time.Minute, RequestTimeout: 5 * time.Minute, SnapshotMaxAge: 120 * time.Second, PollInterval: 60 * time.Second, MemoryBodyBytes: 8 << 20, MaxBodyBytes: 256 << 20, UsageMultiplier: 1}
 }
 
 // ParseConfig applies file fields then environment overrides without merging key arrays.
