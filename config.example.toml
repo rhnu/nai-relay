@@ -1,0 +1,20 @@
+# Array position is wallet identity. Restart after changing configuration.
+keys = ["replace-user-1-key", "replace-user-2-key"]
+upstream_token = "replace-novelai-persistent-token"
+listen = "0.0.0.0:8080"
+database = "data/nai-relay.db"
+reserve = 1.0
+deficit_policy = "proportional" # or "freeze"
+concurrency = 1
+start_interval = "10s"
+queue_per_user = 4
+queue_timeout = "5m"
+request_timeout = "5m"
+snapshot_max_age = "120s"
+poll_interval = "60s"
+memory_body_bytes = 8388608
+max_body_bytes = 268435456
+usage_multiplier = 1.0
+# temp_dir = "/tmp/nai-relay"
+# upstream_url = "https://image.novelai.net"
+# subscription_url = "https://api.novelai.net/user/subscription"

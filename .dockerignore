@@ -1,0 +1,7 @@
+.git
+data
+dist
+config.toml
+*.db*
+nai-relay
+nai-relay.exe
